@@ -3,7 +3,9 @@ package dev.kichan.multiwallpaper
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
 import dev.kichan.multiwallpaper.model.Wallpaper
 import dev.kichan.multiwallpaper.model.WallpaperDatabase
@@ -14,7 +16,9 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-        private val wallpaperDB by lazy { WallpaperDatabase.getDB(getApplication()).wallpaperDao() }
+    private val wallpaperDB by lazy { WallpaperDatabase.getDB(getApplication()).wallpaperDao() }
+
+    val wallpapersList = MutableLiveData<List<Wallpaper>>()
 
     fun saveWallpaper(uri: Uri, onSuccess: () -> Unit) {
         val filePath = FileUtil.saveImage(getApplication(), uri, UUID.randomUUID().toString())
@@ -22,12 +26,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         val wallpaper = Wallpaper(path = filePath, timeStamp = timeStamp)
 
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                wallpaperDB.insertWallpaper(wallpaper)
-            }
+        viewModelScope.launch(Dispatchers.IO) {
+            wallpaperDB.insertWallpaper(wallpaper)
+
             withContext(Dispatchers.Main) {
                 onSuccess()
+            }
+        }
+    }
+
+    fun getWallpaper() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val res = wallpaperDB.getAll()
+            withContext(Dispatchers.Main) {
+                wallpapersList.value = res
             }
         }
     }
