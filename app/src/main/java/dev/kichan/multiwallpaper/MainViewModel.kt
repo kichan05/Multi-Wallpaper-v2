@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+    //todo: DI 적용.. 언젠가는 내가 하겠지
     private val wallpaperDB by lazy { WallpaperDatabase.getDB(getApplication()).wallpaperDao() }
 
     val wallpapersList = MutableLiveData<List<Wallpaper>>()
