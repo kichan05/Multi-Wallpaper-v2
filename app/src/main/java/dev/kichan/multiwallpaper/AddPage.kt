@@ -1,14 +1,21 @@
 package dev.kichan.multiwallpaper
 
 import android.app.Application
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.provider.MediaStore
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -19,7 +26,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
@@ -33,21 +42,15 @@ fun AddPage(
 ) {
     val context = LocalContext.current
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
-    var imagePath by rememberSaveable { mutableStateOf<String?>(null) }
-    var imageBitmap by rememberSaveable { mutableStateOf<Bitmap?>(null) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         imageUri = it
     }
 
-    val fileName = "a.jpg"
-
     Scaffold {
         Column(
             modifier = Modifier.padding(it)
         ) {
-            Text(text = context.filesDir.toString())
-
             Button(onClick = {
                 launcher.launch("image/*")
             }) {
@@ -55,27 +58,45 @@ fun AddPage(
             }
 
             Button(onClick = {
-                viewModel.saveWallpaper(imageUri!!) {
-                    Toast.makeText(context, "저장 완료", Toast.LENGTH_SHORT).show()
-                }
+//                viewModel.saveWallpaper(imageUri!!) {
+//                    Toast.makeText(context, "저장 완료", Toast.LENGTH_SHORT).show()
+//                }
+                viewModel.wallpaperUri.value = imageUri
+                navController.navigate(Route.Crop.name)
             }) {
-                Text(text = "이미지 저장")
+                Text(text = "다음")
             }
 
-            Button(onClick = {
-                imageBitmap = BitmapFactory.decodeFile("${context.filesDir}/$fileName")
-            }) {
-                Text(text = "이미지 가져오기")
+            if(imageUri != null) {
+                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+                Image(bitmap = bitmap.asImageBitmap(), contentDescription = null)
             }
 
-            Text(text = "이미지 URI : $imageUri")
-            Text(text = "저장된 이미지 경로 : $imagePath")
-            if(imageBitmap != null) {
-                Image(bitmap = imageBitmap!!.asImageBitmap(), contentDescription = null)
-            }
+
+//            if(imageUri != null) {
+//                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .aspectRatio(getScreenAspectRatio(context))
+//                        .background(Color.Gray)
+//                        .pointerInput(Unit) {
+//                            detectTransformGestures { _, _, zoom, _ ->
+//
+//                            }
+//                        }
+//                ) {
+//                    Image(bitmap = bitmap.asImageBitmap(), contentDescription = null)
+//                }
+//            }
         }
     }
 }
+
+//fun getScreenAspectRatio(context: Context): Float {
+//    val displayMetrics = context.resources.displayMetrics
+//    return displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
+//}
 
 @Preview(showBackground = true)
 @Composable

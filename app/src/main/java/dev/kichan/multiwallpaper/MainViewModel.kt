@@ -1,6 +1,7 @@
 package dev.kichan.multiwallpaper
 
 import android.app.Application
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
@@ -18,6 +19,8 @@ import java.util.UUID
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     //todo: DI 적용.. 언젠가는 내가 하겠지
     private val wallpaperDB by lazy { WallpaperDatabase.getDB(getApplication()).wallpaperDao() }
+
+    val wallpaperUri = MutableLiveData<Uri>()
 
     val wallpapersList = MutableLiveData<List<Wallpaper>>()
 
