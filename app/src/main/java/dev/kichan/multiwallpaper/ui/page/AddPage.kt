@@ -6,8 +6,18 @@ import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -18,13 +28,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.multiwallpaper.MainViewModel
 import dev.kichan.multiwallpaper.ui.Route
+import dev.kichan.multiwallpaper.ui.component.WallpaperImage
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
 @Composable
@@ -36,6 +50,9 @@ fun AddPage(
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
+        if(imageUri != null && it == null)
+            return@rememberLauncherForActivityResult
+
         imageUri = it
     }
 
@@ -45,24 +62,28 @@ fun AddPage(
 
     Scaffold {
         Column(
-            modifier = Modifier.padding(it)
+            modifier = Modifier
+                .padding(it)
+                .fillMaxSize()
+                .padding(horizontal = 32.dp, vertical = 20.dp),
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Button(onClick = {
-                launcher.launch("image/*")
-            }) {
-                Text(text = "이미지 선택")
-            }
+            val bitmap = if (imageUri != null) MediaStore.Images.Media.getBitmap(
+                context.contentResolver,
+                imageUri
+            ) else null
 
-            Button(onClick = {
-                viewModel.wallpaperUri.value = imageUri
-                navController.navigate(Route.Crop.name)
-            }) {
+            WallpaperImage(image = bitmap, onClick = { launcher.launch("image/*") })
+
+            Button(
+                onClick = {
+                    viewModel.wallpaperUri.value = imageUri
+                    navController.navigate(Route.Crop.name)
+                },
+                modifier = Modifier.fillMaxWidth(),
+                enabled = imageUri != null
+            ) {
                 Text(text = "다음")
-            }
-
-            if(imageUri != null) {
-                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-                Image(bitmap = bitmap.asImageBitmap(), contentDescription = null)
             }
         }
     }
@@ -71,7 +92,8 @@ fun AddPage(
 @Preview(showBackground = true)
 @Composable
 fun AddPagePreview() {
-    MultiWallpaperTheme {  AddPage(
+    MultiWallpaperTheme {
+        AddPage(
             navController = rememberNavController(),
             viewModel = MainViewModel(LocalContext.current as Application)
         )

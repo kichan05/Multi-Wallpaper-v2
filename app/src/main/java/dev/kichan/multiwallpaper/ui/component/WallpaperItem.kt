@@ -71,7 +71,7 @@ fun WallpaperItem(
                         onLongPress = { isDeleteMode = !isDeleteMode }
                     )
                 },
-            image = wallpaperImage
+            image = wallpaperImage,
         )
     }
 
