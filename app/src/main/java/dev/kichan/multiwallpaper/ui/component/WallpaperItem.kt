@@ -36,7 +36,7 @@ fun WallpaperItem(
     val imageShape = RoundedCornerShape(34.dp)
 
     Column(
-        modifier = modifier.fillMaxWidth().padding(12.dp),
+        modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(

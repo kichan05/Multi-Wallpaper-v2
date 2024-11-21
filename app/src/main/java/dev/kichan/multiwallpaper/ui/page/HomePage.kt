@@ -2,8 +2,10 @@ package dev.kichan.multiwallpaper.ui.page
 
 import android.app.Application
 import android.app.WallpaperManager
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -18,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.multiwallpaper.MainViewModel
@@ -54,7 +57,12 @@ fun HomePage(
 //            Button(onClick = { viewModel.getWallpaper() }) {
 //                Text(text = "새로 고침")
 //            }
-            HorizontalPager(state = wallpaperPagerState, modifier = Modifier.weight(1f)) { page ->
+            HorizontalPager(
+                state = wallpaperPagerState,
+                modifier = Modifier.weight(1f),
+                contentPadding = PaddingValues(horizontal = 32.dp),
+                pageSpacing = 12.dp
+            ) { page ->
                 WallpaperItem(wallpaper = wallpaperList!!.get(page))
             }
 
@@ -64,6 +72,7 @@ fun HomePage(
                 wallpaperManager.setBitmap(
                     wallpaperList!!.get(wallpaperPagerState.currentPage).getBitmap()
                 )
+                Toast.makeText(context, "배경화면으로 지정되었습니다.", Toast.LENGTH_SHORT).show()
             }) {
                 Text(text = "배경화면으로 지정")
             }
