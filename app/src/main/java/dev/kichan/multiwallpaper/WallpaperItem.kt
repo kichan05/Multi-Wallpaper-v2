@@ -68,10 +68,9 @@ fun WallpaperItemPreview() {
                 id = 0,
                 path = "/data/user/0/dev.kichan.multiwallpaper/files/7c2f0fc1-da62-4263-a9d7-9820141912bf",
                 timeStamp = "2024-11-20T18:34:17.010240",
-                cropLeft = 0,
-                cropTop = 0,
-                cropRight = 0,
-                cropBottom = 0,
+                cropScale = 0f,
+                cropOffsetX = 0f,
+                cropOffsetY = 0f,
             )
         )
     }
