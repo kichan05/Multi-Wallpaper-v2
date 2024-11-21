@@ -62,10 +62,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteWallpaper(wallpaper: Wallpaper) {
+        wallpapersList.value = wallpapersList.value!!.filter { it != wallpaper }
         viewModelScope.launch(Dispatchers.IO) {
             wallpaperDB.deleteWallpaper(wallpaper)
-
-            getWallpaper()
         }
     }
 }

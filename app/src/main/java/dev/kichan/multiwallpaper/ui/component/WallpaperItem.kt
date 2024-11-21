@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import dev.kichan.multiwallpaper.model.Wallpaper
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WallpaperItem(
     modifier: Modifier = Modifier,
@@ -55,7 +54,7 @@ fun WallpaperItem(
     onDeleteClick : () -> Unit
 ) {
     val imageShape = RoundedCornerShape(34.dp)
-    var isDeleteMode by rememberSaveable { mutableStateOf(false) }
+    var isDeleteMode by remember { mutableStateOf(false) }
     val deleteModelOffsetY by animateDpAsState(targetValue = if (isDeleteMode) (-300).dp else 0.dp)
     val wallpaperImage by remember { mutableStateOf(wallpaper.getBitmap().asImageBitmap()) }
 
