@@ -93,11 +93,6 @@ fun AddPage(
     }
 }
 
-//fun getScreenAspectRatio(context: Context): Float {
-//    val displayMetrics = context.resources.displayMetrics
-//    return displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
-//}
-
 @Preview(showBackground = true)
 @Composable
 fun AddPagePreview() {

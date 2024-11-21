@@ -28,7 +28,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val filePath = FileUtil.saveImage(getApplication(), uri, UUID.randomUUID().toString())
         val timeStamp = LocalDateTime.now().toString()
 
-        val wallpaper = Wallpaper(path = filePath, timeStamp = timeStamp)
+        val wallpaper = Wallpaper(path = filePath, timeStamp = timeStamp, cropLeft = 0, cropTop = 0, cropRight = 0, cropBottom = 0)
 
         viewModelScope.launch(Dispatchers.IO) {
             wallpaperDB.insertWallpaper(wallpaper)
