@@ -32,7 +32,6 @@ fun WallpaperItem(
     modifier: Modifier = Modifier,
     wallpaper: Wallpaper,
 ) {
-
     val imageShape = RoundedCornerShape(34.dp)
 
     Column(
