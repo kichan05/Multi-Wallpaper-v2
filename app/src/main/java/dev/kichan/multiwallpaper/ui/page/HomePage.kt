@@ -2,6 +2,7 @@ package dev.kichan.multiwallpaper.ui.page
 
 import android.app.Application
 import android.app.WallpaperManager
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -70,7 +71,11 @@ fun HomePage(
             ) { page ->
                 if (page < wallpaperList!!.size) {
                     WallpaperItem(
-                        wallpaper = wallpaperList!!.get(page),
+                        wallpaper = wallpaperList!![page],
+                        onDeleteClick = {
+                            Log.d("TAG", wallpaperList!![page].toString())
+                            viewModel.deleteWallpaper(wallpaperList!![page])
+                        }
                     )
                 } else {
                     val imageShape = RoundedCornerShape(34.dp)

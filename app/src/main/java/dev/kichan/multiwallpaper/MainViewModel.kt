@@ -60,4 +60,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    fun deleteWallpaper(wallpaper: Wallpaper) {
+        viewModelScope.launch(Dispatchers.IO) {
+            wallpaperDB.deleteWallpaper(wallpaper)
+
+            getWallpaper()
+        }
+    }
 }

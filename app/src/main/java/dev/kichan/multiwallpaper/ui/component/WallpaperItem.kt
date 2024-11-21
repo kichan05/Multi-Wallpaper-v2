@@ -52,11 +52,12 @@ import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 fun WallpaperItem(
     modifier: Modifier = Modifier,
     wallpaper: Wallpaper,
+    onDeleteClick : () -> Unit
 ) {
     val imageShape = RoundedCornerShape(34.dp)
     var isDeleteMode by rememberSaveable { mutableStateOf(false) }
-
     val deleteModelOffsetY by animateDpAsState(targetValue = if (isDeleteMode) (-300).dp else 0.dp)
+    val wallpaperImage by remember { mutableStateOf(wallpaper.getBitmap().asImageBitmap()) }
 
     Box(
         modifier = modifier.fillMaxWidth(),
@@ -65,7 +66,7 @@ fun WallpaperItem(
             modifier = Modifier.align(Alignment.BottomCenter)
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { onDeleteClick() },
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -98,7 +99,7 @@ fun WallpaperItem(
                     )
                 }
             ,
-            bitmap = wallpaper.getBitmap().asImageBitmap(),
+            bitmap = wallpaperImage,
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
@@ -119,6 +120,7 @@ fun WallpaperItemPreview() {
                 cropOffsetX = 0f,
                 cropOffsetY = 0f,
             ),
+            onDeleteClick = {}
         )
     }
 }
