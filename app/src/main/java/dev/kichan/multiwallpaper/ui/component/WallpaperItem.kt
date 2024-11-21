@@ -1,5 +1,7 @@
 package dev.kichan.multiwallpaper.ui.component
 
+import android.content.Context
+import android.os.Vibrator
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -20,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.kichan.multiwallpaper.model.Wallpaper
@@ -31,8 +34,9 @@ fun WallpaperItem(
     wallpaper: Wallpaper,
     onDeleteClick: () -> Unit
 ) {
+    val context = LocalContext.current
     var isDeleteMode by remember { mutableStateOf(false) }
-    val deleteModelOffsetY by animateDpAsState(targetValue = if (isDeleteMode) (-300).dp else 0.dp)
+    val deleteModelOffsetY by animateDpAsState(targetValue = if (isDeleteMode) (-200).dp else 0.dp)
     val wallpaperImage by remember { mutableStateOf(wallpaper.getBitmap()) }
 
     Box(
@@ -65,13 +69,13 @@ fun WallpaperItem(
             modifier = Modifier
                 .graphicsLayer {
                     translationY = deleteModelOffsetY.value
-                }
-                .pointerInput(Unit) {
-                    detectTapGestures(
-                        onLongPress = { isDeleteMode = !isDeleteMode }
-                    )
                 },
             image = wallpaperImage,
+            onLongClick = {
+                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                vibrator.vibrate(50)
+                isDeleteMode = !isDeleteMode
+            }
         )
     }
 

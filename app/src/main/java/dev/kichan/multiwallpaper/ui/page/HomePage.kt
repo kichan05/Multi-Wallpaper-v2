@@ -82,7 +82,6 @@ fun HomePage(
                         WallpaperItem(
                             wallpaper = wallpaper,
                             onDeleteClick = {
-                                Log.d("TAG", wallpaper.toString())
                                 viewModel.deleteWallpaper(wallpaper)
                             }
                         )
