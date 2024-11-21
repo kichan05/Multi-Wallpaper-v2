@@ -6,12 +6,16 @@ import android.provider.MediaStore
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTransformGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -42,6 +46,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.multiwallpaper.MainViewModel
 import dev.kichan.multiwallpaper.ui.Route
+import dev.kichan.multiwallpaper.ui.component.WallpaperImage
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
 @Composable
@@ -63,28 +68,52 @@ fun CropPage(
     var offsetY by rememberSaveable { mutableStateOf(0f) }
     var boxSize by remember { mutableStateOf(IntSize.Zero) }
 
+    val onSaveClick = {
+        viewModel.saveWallpaper(
+            uri = imageUri!!,
+            scale = scale,
+            offsetX = offsetX,
+            offsetY = offsetY
+        ) {
+            Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
+
+            navController.navigate(Route.Main.name)
+        }
+    }
+
+    //todo: WallpaperImage 컴포넌트랑 sexy하게 통합할 수 있는 방법을 생각해보자
+    val imageShape = RoundedCornerShape(34.dp)
+    val shapeModifier = Modifier
+        .aspectRatio(9f / 16f)
+        .fillMaxWidth(1f)
+        .clip(imageShape)
+        .background(color = Color.Gray, shape = imageShape)
+        .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape)
+        .pointerInput(Unit) {
+            detectTransformGestures { _, pan, zoom, _ ->
+                scale *= zoom
+                offsetX += pan.x
+                offsetY += pan.y
+            }
+        }
+        .clipToBounds()
+        .onSizeChanged {
+            boxSize = it
+        }
+
     Scaffold {
         Column(
-            modifier = Modifier.padding(it),
+            modifier = Modifier
+                .padding(it)
+                .padding(horizontal = 32.dp, vertical = 20.dp)
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
         ) {
+            Text(text = "이미지 크기를 조절해주세요. (사실 아직 안됨)")
+
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .aspectRatio(getScreenAspectRatio(context))
-                    .clip(shape = RoundedCornerShape(12.dp))
-                    .background(Color.Gray)
-                    .pointerInput(Unit) {
-                        detectTransformGestures { _, pan, zoom, _ ->
-                            scale *= zoom
-                            offsetX += pan.x
-                            offsetY += pan.y
-                        }
-                    }
-                    .clipToBounds()
-                    .onSizeChanged {
-                        boxSize = it
-                    }
+                modifier = shapeModifier
             ) {
                 Image(
                     bitmap = bitmap.asImageBitmap(),
@@ -96,42 +125,14 @@ fun CropPage(
                             scaleY = scale,
                             translationX = offsetX,
                             translationY = offsetY,
-//                            transformOrigin = TransformOrigin(0f, 0f)
                         )
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            Button(onClick = {
-//                val imageWidth = bitmap.width.toFloat()
-//                val imageHeight = bitmap.height.toFloat()
-//
-//                val boxWidth = boxSize.width
-//                val boxHeight = boxSize.width
-//                val cropLeft = ((0f - offsetX) / scale).coerceIn(0f, imageWidth)
-//                val cropTop = ((0f - offsetY) / scale).coerceIn(0f, imageHeight)
-//                val cropRight = ((boxWidth.toFloat() - offsetX) / scale).coerceIn(0f, imageWidth)
-//                val cropBottom = ((boxHeight.toFloat() - offsetY) / scale).coerceIn(0f, imageHeight)
-//                Log.d("TAG", "sacle : $scale")
-//                Log.d("TAG", "offsetX : $offsetX")
-//                Log.d("TAG", "offsetY : $offsetY")
-//                Log.d("TAG", "boxWidth : ${boxSize.width}")
-//                Log.d("TAG", "boxHeight : ${boxSize.height}")
-//                Log.d("TAG", "imageWidth : $imageWidth, imageHeight : $imageHeight, ")
-//                Log.d("TAG", "cropLeft: $cropLeft")
-//                Log.d("TAG", "cropRight: $cropRight")
-//                Log.d("TAG", "cropBottom: $cropBottom")
-//                Log.d("TAG", "cropBottom: $cropBottom")
-                viewModel.saveWallpaper(
-                    uri = imageUri!!,
-                    scale = scale,
-                    offsetX = offsetX,
-                    offsetY = offsetY
-                ) {
-                    Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
-
-                    navController.navigate(Route.Main.name)
-                }
-            }) {
+            Button(
+                onClick = { onSaveClick() },
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 Text(text = "저장")
             }
         }
