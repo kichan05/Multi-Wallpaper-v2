@@ -62,13 +62,6 @@ fun HomePage(
             modifier = Modifier.padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-//            Button(onClick = { navController.navigate(Route.Add.name) }) {
-//                Text(text = "추가")
-//            }
-//
-//            Button(onClick = { viewModel.getWallpaper() }) {
-//                Text(text = "새로 고침")
-//            }
             HorizontalPager(
                 state = wallpaperPagerState,
                 modifier = Modifier.weight(1f),
@@ -76,7 +69,9 @@ fun HomePage(
                 pageSpacing = 12.dp
             ) { page ->
                 if (page < wallpaperList!!.size) {
-                    WallpaperItem(wallpaper = wallpaperList!!.get(page))
+                    WallpaperItem(
+                        wallpaper = wallpaperList!!.get(page),
+                    )
                 } else {
                     val imageShape = RoundedCornerShape(34.dp)
                     Box(
