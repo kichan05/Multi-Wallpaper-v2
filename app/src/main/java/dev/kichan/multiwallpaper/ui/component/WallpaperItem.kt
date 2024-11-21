@@ -4,17 +4,21 @@ import android.app.WallpaperManager
 import android.graphics.Rect
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -28,32 +32,23 @@ fun WallpaperItem(
     modifier: Modifier = Modifier,
     wallpaper: Wallpaper,
 ) {
-    val context = LocalContext.current
-    val wallpaperManager = WallpaperManager.getInstance(context)
+
+    val imageShape = RoundedCornerShape(34.dp)
 
     Column(
-        modifier = modifier
+        modifier = modifier.fillMaxWidth().padding(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             modifier = Modifier
                 .aspectRatio(9f / 16f)
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(12.dp)),
+                .weight(1f)
+                .clip(imageShape)
+                .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape),
             bitmap = wallpaper.getBitmap().asImageBitmap(),
             contentDescription = null,
             contentScale = ContentScale.Crop
         )
-        Spacer(modifier = Modifier.height(12.dp))
-        Button(onClick = {
-            wallpaperManager.setBitmap(
-                wallpaper.getBitmap(),
-                Rect(0, 0, 1920, 1080),
-                false,
-            )
-            Toast.makeText(context, "적용 완료", Toast.LENGTH_SHORT).show()
-        }) {
-            Text(text = "배경화면 적용")
-        }
     }
 }
 

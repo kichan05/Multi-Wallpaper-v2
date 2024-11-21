@@ -23,7 +23,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val wallpaperUri = MutableLiveData<Uri>()
 
-    val wallpapersList = MutableLiveData<List<Wallpaper>>()
+    val wallpapersList = MutableLiveData<List<Wallpaper>>(listOf())
 
     fun saveWallpaper(
         uri: Uri,
