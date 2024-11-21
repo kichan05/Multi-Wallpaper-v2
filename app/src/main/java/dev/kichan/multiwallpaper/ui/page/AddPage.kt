@@ -12,6 +12,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -38,6 +39,10 @@ fun AddPage(
         imageUri = it
     }
 
+    LaunchedEffect(Unit) {
+        launcher.launch("image/*")
+    }
+
     Scaffold {
         Column(
             modifier = Modifier.padding(it)
@@ -49,9 +54,6 @@ fun AddPage(
             }
 
             Button(onClick = {
-//                viewModel.saveWallpaper(imageUri!!) {
-//                    Toast.makeText(context, "저장 완료", Toast.LENGTH_SHORT).show()
-//                }
                 viewModel.wallpaperUri.value = imageUri
                 navController.navigate(Route.Crop.name)
             }) {
@@ -62,24 +64,6 @@ fun AddPage(
                 val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
                 Image(bitmap = bitmap.asImageBitmap(), contentDescription = null)
             }
-
-
-//            if(imageUri != null) {
-//                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
-//                Box(
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .aspectRatio(getScreenAspectRatio(context))
-//                        .background(Color.Gray)
-//                        .pointerInput(Unit) {
-//                            detectTransformGestures { _, _, zoom, _ ->
-//
-//                            }
-//                        }
-//                ) {
-//                    Image(bitmap = bitmap.asImageBitmap(), contentDescription = null)
-//                }
-//            }
         }
     }
 }
