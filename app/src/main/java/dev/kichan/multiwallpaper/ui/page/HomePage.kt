@@ -122,7 +122,7 @@ fun HomePage(
                 if(type == WallpaperManager.FLAG_LOCK || type == -1) {
                     wallpaperManager.setBitmap(
                         wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
-                        Rect(0, 0, 1920, 1080),
+                        wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
                         true,
                         WallpaperManager.FLAG_LOCK
                     )

@@ -44,6 +44,6 @@ data class Wallpaper(
 //                Log.d("TAG", "cropRight: $cropRight")
 //                Log.d("TAG", "cropBottom: $cropBottom")
 //                Log.d("TAG", "cropBottom: $cropBottom")
-        return Rect(0, 0, 1920, 1080)
+        return Rect(0, 0, getBitmap().width, getBitmap().height)
     }
 }
