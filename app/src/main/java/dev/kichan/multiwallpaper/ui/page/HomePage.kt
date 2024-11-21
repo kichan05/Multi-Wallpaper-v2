@@ -1,7 +1,6 @@
-package dev.kichan.multiwallpaper
+package dev.kichan.multiwallpaper.ui.page
 
 import android.app.Application
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +16,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import dev.kichan.multiwallpaper.MainViewModel
+import dev.kichan.multiwallpaper.ui.Route
+import dev.kichan.multiwallpaper.ui.component.WallpaperItem
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
 @Composable

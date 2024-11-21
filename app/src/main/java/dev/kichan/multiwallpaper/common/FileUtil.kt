@@ -1,4 +1,4 @@
-package dev.kichan.multiwallpaper
+package dev.kichan.multiwallpaper.common
 
 import android.content.Context
 import android.net.Uri

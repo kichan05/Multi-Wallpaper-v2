@@ -1,4 +1,4 @@
-package dev.kichan.multiwallpaper
+package dev.kichan.multiwallpaper.ui
 
 enum class Route{
     Main, Add, Crop

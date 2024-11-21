@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.room.Room
+import dev.kichan.multiwallpaper.common.FileUtil
 import dev.kichan.multiwallpaper.model.Wallpaper
 import dev.kichan.multiwallpaper.model.WallpaperDatabase
 import kotlinx.coroutines.Dispatchers

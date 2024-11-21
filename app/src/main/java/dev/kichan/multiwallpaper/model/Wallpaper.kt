@@ -24,6 +24,7 @@ data class Wallpaper(
     }
 
     fun getCropRect() : Rect {
+        //todo: CropRect 계산식 작성
         return Rect(0, 0, 0, 0)
     }
 }
