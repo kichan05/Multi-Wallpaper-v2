@@ -108,17 +108,15 @@ fun CropPage(
             }
             Spacer(modifier = Modifier.height(12.dp))
             Button(onClick = {
-                val imageWidth = bitmap.width.toFloat()
-                val imageHeight = bitmap.height.toFloat()
-
-                val boxWidth = boxSize.width
-                val boxHeight = boxSize.width
-
-                val cropLeft = ((0f - offsetX) / scale).coerceIn(0f, imageWidth)
-                val cropTop = ((0f - offsetY) / scale).coerceIn(0f, imageHeight)
-                val cropRight = ((boxWidth.toFloat() - offsetX) / scale).coerceIn(0f, imageWidth)
-                val cropBottom = ((boxHeight.toFloat() - offsetY) / scale).coerceIn(0f, imageHeight)
-
+//                val imageWidth = bitmap.width.toFloat()
+//                val imageHeight = bitmap.height.toFloat()
+//
+//                val boxWidth = boxSize.width
+//                val boxHeight = boxSize.width
+//                val cropLeft = ((0f - offsetX) / scale).coerceIn(0f, imageWidth)
+//                val cropTop = ((0f - offsetY) / scale).coerceIn(0f, imageHeight)
+//                val cropRight = ((boxWidth.toFloat() - offsetX) / scale).coerceIn(0f, imageWidth)
+//                val cropBottom = ((boxHeight.toFloat() - offsetY) / scale).coerceIn(0f, imageHeight)
 //                Log.d("TAG", "sacle : $scale")
 //                Log.d("TAG", "offsetX : $offsetX")
 //                Log.d("TAG", "offsetY : $offsetY")
@@ -129,18 +127,16 @@ fun CropPage(
 //                Log.d("TAG", "cropRight: $cropRight")
 //                Log.d("TAG", "cropBottom: $cropBottom")
 //                Log.d("TAG", "cropBottom: $cropBottom")
+                viewModel.saveWallpaper(
+                    uri = imageUri!!,
+                    scale = scale,
+                    offsetX = offsetX,
+                    offsetY = offsetY
+                ) {
+                    Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
 
-                val cropRect = Rect(
-                    cropLeft.roundToInt(),
-                    cropTop.roundToInt(),
-                    cropRight.roundToInt(),
-                    cropBottom.roundToInt()
-                )
-
-                val w = WallpaperManager.getInstance(context)
-                w.setBitmap(bitmap, cropRect, false)
-
-                Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
+                    navController.navigate(Route.Main.name)
+                }
             }) {
                 Text(text = "저장")
             }

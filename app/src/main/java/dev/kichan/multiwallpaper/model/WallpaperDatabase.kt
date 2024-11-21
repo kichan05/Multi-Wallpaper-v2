@@ -12,6 +12,8 @@ abstract class WallpaperDatabase : RoomDatabase() {
     companion object {
         fun getDB(context: Context): WallpaperDatabase = Room.databaseBuilder(
             context, WallpaperDatabase::class.java, "wallpaper"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 }

@@ -24,11 +24,23 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val wallpapersList = MutableLiveData<List<Wallpaper>>()
 
-    fun saveWallpaper(uri: Uri, onSuccess: () -> Unit) {
+    fun saveWallpaper(
+        uri: Uri,
+        scale: Float,
+        offsetX: Float,
+        offsetY: Float,
+        onSuccess: () -> Unit
+    ) {
         val filePath = FileUtil.saveImage(getApplication(), uri, UUID.randomUUID().toString())
         val timeStamp = LocalDateTime.now().toString()
 
-        val wallpaper = Wallpaper(path = filePath, timeStamp = timeStamp, cropScale = 0f, cropOffsetX = 0f, cropOffsetY = 0f)
+        val wallpaper = Wallpaper(
+            path = filePath,
+            timeStamp = timeStamp,
+            cropScale = scale,
+            cropOffsetX = offsetX,
+            cropOffsetY = offsetY,
+        )
 
         viewModelScope.launch(Dispatchers.IO) {
             wallpaperDB.insertWallpaper(wallpaper)
