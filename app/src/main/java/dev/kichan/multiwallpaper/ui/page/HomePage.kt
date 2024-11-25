@@ -131,12 +131,13 @@ fun HomePage(
                 if(type == WallpaperManager.FLAG_SYSTEM || type == -1) {
                     wallpaperManager.setBitmap(
                         wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
-                        Rect(0, 0, 1920, 1080),
+                        wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
                         true,
                         WallpaperManager.FLAG_SYSTEM
                     )
                 }
                 Toast.makeText(context, "배경화면으로 지정되었습니다.", Toast.LENGTH_SHORT).show()
+                isScreenSelectDialogShow = false
             }) {
                 isScreenSelectDialogShow = false
             }

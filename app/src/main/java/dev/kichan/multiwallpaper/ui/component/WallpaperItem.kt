@@ -2,16 +2,23 @@ package dev.kichan.multiwallpaper.ui.component
 
 import android.content.Context
 import android.os.Vibrator
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import dev.kichan.multiwallpaper.model.Wallpaper
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WallpaperItem(
     modifier: Modifier = Modifier,
@@ -35,12 +43,18 @@ fun WallpaperItem(
     onDeleteClick: () -> Unit
 ) {
     val context = LocalContext.current
+    val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
     var isDeleteMode by remember { mutableStateOf(false) }
+    var isMoveMode by remember { mutableStateOf(false) }
+
     val deleteModelOffsetY by animateDpAsState(targetValue = if (isDeleteMode) (-200).dp else 0.dp)
     val wallpaperImage by remember { mutableStateOf(wallpaper.getBitmap()) }
 
     Box(
-        modifier = modifier.fillMaxWidth(),
+        modifier = Modifier
+            .then(if (isMoveMode) Modifier.offset(x = 10.dp, y = 10.dp) else Modifier)
+            .fillMaxWidth()
     ) {
         Row(
             modifier = Modifier.align(Alignment.BottomCenter)
@@ -67,16 +81,41 @@ fun WallpaperItem(
 
         WallpaperImage(
             modifier = Modifier
+                .pointerInput(Unit) {
+                    detectDragGestures(
+                        onDragStart = {
+                            Log.d("dragEvent", "onDragStart")
+                            if(!isDeleteMode) return@detectDragGestures
+                        },
+                        onDragCancel = {
+                            Log.d("dragEvent", "onDragEnd")
+                            isMoveMode = false
+                        },
+                        onDragEnd = {
+                            Log.d("dragEvent", "onDragEnd")
+                            isMoveMode = false
+                        },
+                        onDrag = { change, dragAmount ->
+                            Log.d("dragEvent", "onDrag")
+                        },
+                        onRe
+                    )
+                }
                 .graphicsLayer {
                     translationY = deleteModelOffsetY.value
                 },
             image = wallpaperImage,
-            onLongClick = {
-                val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            onClick = {
                 vibrator.vibrate(50)
                 isDeleteMode = !isDeleteMode
+            },
+            onLongClick = {
+                vibrator.vibrate(50)
+                isMoveMode = true
             }
         )
+
+        Text(text = isMoveMode.toString())
     }
 
 
