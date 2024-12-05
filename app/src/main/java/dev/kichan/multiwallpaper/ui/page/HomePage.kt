@@ -74,7 +74,7 @@ fun HomePage(
                 state = wallpaperPagerState,
                 modifier = Modifier.weight(1f),
                 contentPadding = PaddingValues(horizontal = 32.dp),
-                pageSpacing = 12.dp
+                pageSpacing = 20.dp
             ) { page ->
                 if (page < wallpaperList!!.size) {
                     val wallpaper = wallpaperList!![page]
@@ -88,19 +88,21 @@ fun HomePage(
                     }
                 } else {
                     val imageShape = RoundedCornerShape(34.dp)
-                    Box(
-                        modifier = Modifier
-                            .aspectRatio(9f / 16f)
-                            .weight(1f)
-                            .clip(imageShape)
-                            .background(color = Color(0xFFE6E6E6), shape = imageShape)
-                            .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape)
-                            .clickable {
-                                navController.navigate(Route.Add.name)
-                            },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                    key("add") {
+                        Box(
+                            modifier = Modifier
+                                .aspectRatio(9f / 16f)
+                                .weight(1f)
+                                .clip(imageShape)
+                                .background(color = Color(0xFFE6E6E6), shape = imageShape)
+                                .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape)
+                                .clickable {
+                                    navController.navigate(Route.Add.name)
+                                },
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                        }
                     }
                 }
             }
@@ -122,7 +124,7 @@ fun HomePage(
                 if(type == WallpaperManager.FLAG_LOCK || type == -1) {
                     wallpaperManager.setBitmap(
                         wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
-                        Rect(0, 0, 1920, 1080),
+                        wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
                         true,
                         WallpaperManager.FLAG_LOCK
                     )

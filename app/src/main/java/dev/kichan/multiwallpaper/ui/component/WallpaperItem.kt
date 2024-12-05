@@ -48,12 +48,11 @@ fun WallpaperItem(
     var isDeleteMode by remember { mutableStateOf(false) }
     var isMoveMode by remember { mutableStateOf(false) }
 
-    val deleteModelOffsetY by animateDpAsState(targetValue = if (isDeleteMode) (-200).dp else 0.dp)
+    val deleteModelOffsetY by animateDpAsState(targetValue = if (isDeleteMode) (-70).dp else 0.dp)
     val wallpaperImage by remember { mutableStateOf(wallpaper.getBitmap()) }
 
     Box(
         modifier = Modifier
-            .then(if (isMoveMode) Modifier.offset(x = 10.dp, y = 10.dp) else Modifier)
             .fillMaxWidth()
     ) {
         Row(
@@ -81,41 +80,18 @@ fun WallpaperItem(
 
         WallpaperImage(
             modifier = Modifier
-                .pointerInput(Unit) {
-                    detectDragGestures(
-                        onDragStart = {
-                            Log.d("dragEvent", "onDragStart")
-                            if(!isDeleteMode) return@detectDragGestures
-                        },
-                        onDragCancel = {
-                            Log.d("dragEvent", "onDragEnd")
-                            isMoveMode = false
-                        },
-                        onDragEnd = {
-                            Log.d("dragEvent", "onDragEnd")
-                            isMoveMode = false
-                        },
-                        onDrag = { change, dragAmount ->
-                            Log.d("dragEvent", "onDrag")
-                        },
-                        onRe
-                    )
-                }
-                .graphicsLayer {
-                    translationY = deleteModelOffsetY.value
-                },
+                .offset(y = deleteModelOffsetY),
             image = wallpaperImage,
             onClick = {
                 vibrator.vibrate(50)
-                isDeleteMode = !isDeleteMode
+                isDeleteMode = false
             },
             onLongClick = {
                 vibrator.vibrate(50)
+                isDeleteMode = true
                 isMoveMode = true
             }
         )
-
-        Text(text = isMoveMode.toString())
     }
 
 

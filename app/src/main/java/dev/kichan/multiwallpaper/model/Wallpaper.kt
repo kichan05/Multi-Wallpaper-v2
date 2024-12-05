@@ -24,9 +24,10 @@ data class Wallpaper(
     }
 
     fun getCropRect() : Rect {
+        val bitmap = getBitmap()
         //todo: CropRect 계산식 작성
-//                val imageWidth = bitmap.width.toFloat()
-//                val imageHeight = bitmap.height.toFloat()
+                val imageWidth = bitmap.width
+                val imageHeight = bitmap.height
 //
 //                val boxWidth = boxSize.width
 //                val boxHeight = boxSize.width
@@ -44,6 +45,6 @@ data class Wallpaper(
 //                Log.d("TAG", "cropRight: $cropRight")
 //                Log.d("TAG", "cropBottom: $cropBottom")
 //                Log.d("TAG", "cropBottom: $cropBottom")
-        return Rect(0, 0, 1920, 1080)
+        return Rect(0, 0, imageWidth, imageHeight)
     }
 }
