@@ -45,6 +45,7 @@ import dev.kichan.multiwallpaper.ui.Route
 import dev.kichan.multiwallpaper.ui.component.HomeLocalBottomSheet
 import dev.kichan.multiwallpaper.ui.component.PagerIndicator
 import dev.kichan.multiwallpaper.ui.component.WallpaperItem
+import dev.kichan.multiwallpaper.ui.component.shapeModifier
 import dev.kichan.multiwallpaper.ui.theme.ColorPalette
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
@@ -87,21 +88,16 @@ fun HomePage(
                         )
                     }
                 } else {
-                    val imageShape = RoundedCornerShape(34.dp)
                     key("add") {
                         Box(
-                            modifier = Modifier
-                                .aspectRatio(9f / 16f)
-                                .weight(1f)
-                                .clip(imageShape)
-                                .background(color = Color(0xFFE6E6E6), shape = imageShape)
-                                .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape)
+                            modifier = shapeModifier
+                                .background(ColorPalette.Gray3)
                                 .clickable {
                                     navController.navigate(Route.Add.name)
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+                            Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = ColorPalette.Gray7)
                         }
                     }
                 }

@@ -20,6 +20,14 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 
+val imageShape = RoundedCornerShape(34.dp)
+
+val shapeModifier = Modifier
+    .aspectRatio(9f / 16f)
+    .fillMaxWidth(1f)
+    .clip(imageShape)
+    .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape)
+
 @Composable
 fun WallpaperImage(
     modifier: Modifier = Modifier,
@@ -27,23 +35,16 @@ fun WallpaperImage(
     onClick: () -> Unit = {},
     onLongClick: () -> Unit = {}
 ) {
-    val imageShape = RoundedCornerShape(34.dp)
-
-    val shapeModifier = modifier
-        .aspectRatio(9f / 16f)
-        .fillMaxWidth(1f)
-        .clip(imageShape)
-        .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape)
-        .pointerInput(Unit) {
-            detectTapGestures(
-                onTap = { onClick() },
-                onLongPress = { onLongClick() }
-            )
-        }
-
     if (image != null) {
         Image(
-            modifier = shapeModifier,
+            modifier = modifier
+                .then(shapeModifier)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = { onClick() },
+                        onLongPress = { onLongClick() }
+                    )
+                },
             bitmap = image.asImageBitmap(),
             contentDescription = null,
             contentScale = ContentScale.Crop
