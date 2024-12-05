@@ -48,6 +48,7 @@ import dev.kichan.multiwallpaper.ui.component.WallpaperItem
 import dev.kichan.multiwallpaper.ui.component.shapeModifier
 import dev.kichan.multiwallpaper.ui.theme.ColorPalette
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
+import dev.kichan.multiwallpaper.ui.theme.buttonColor
 
 @Composable
 fun HomePage(
@@ -112,12 +113,7 @@ fun HomePage(
                     isScreenSelectDialogShow = true
                 },
                 enabled = wallpaperPagerState.currentPage < wallpaperList!!.size,
-                colors = ButtonColors(
-                    containerColor = ColorPalette.Gray1,
-                    contentColor = ColorPalette.Gray7,
-                    disabledContainerColor = ColorPalette.Gray0,
-                    disabledContentColor = ColorPalette.Gray4,
-                )
+                colors = buttonColor
             ) {
                 Text(text = "배경화면으로 지정", modifier = Modifier.padding(horizontal = 20.dp))
             }

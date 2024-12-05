@@ -40,6 +40,7 @@ import dev.kichan.multiwallpaper.MainViewModel
 import dev.kichan.multiwallpaper.ui.Route
 import dev.kichan.multiwallpaper.ui.component.WallpaperImage
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
+import dev.kichan.multiwallpaper.ui.theme.buttonColor
 
 @Composable
 fun AddPage(
@@ -80,6 +81,7 @@ fun AddPage(
                     viewModel.wallpaperUri.value = imageUri
                     navController.navigate(Route.Crop.name)
                 },
+                colors = buttonColor,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = imageUri != null
             ) {
