@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.Navigation
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.multiwallpaper.ui.Route
 import dev.kichan.multiwallpaper.ui.page.AddPage
@@ -23,14 +25,16 @@ fun MyApp(viewModel: MainViewModel) {
                 viewModel = viewModel
             )
         }
-        composable(route = Route.Add.name) {
-            AddPage(
-                navController = navController,
-                viewModel = viewModel
-            )
-        }
-        composable(route = Route.Crop.name) {
-            CropPage(navController = navController, viewModel = viewModel)
+        navigation(startDestination = Route.Add.name, route = Route.AddNavigation.name) {
+            composable(route = Route.Add.name) {
+                AddPage(
+                    navController = navController,
+                    viewModel = viewModel
+                )
+            }
+            composable(route = Route.Crop.name) {
+                CropPage(navController = navController, viewModel = viewModel)
+            }
         }
     }
 }

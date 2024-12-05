@@ -1,5 +1,5 @@
 package dev.kichan.multiwallpaper.ui
 
 enum class Route{
-    Main, Add, Crop
+    Main, Add, Crop, AddNavigation
 }
