@@ -9,7 +9,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -17,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +45,7 @@ import dev.kichan.multiwallpaper.ui.Route
 import dev.kichan.multiwallpaper.ui.component.HomeLocalBottomSheet
 import dev.kichan.multiwallpaper.ui.component.PagerIndicator
 import dev.kichan.multiwallpaper.ui.component.WallpaperItem
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
 @Composable
@@ -105,14 +109,24 @@ fun HomePage(
 
             PagerIndicator(pagerState = wallpaperPagerState)
 
+            Spacer(modifier = Modifier.height(20.dp))
+
             Button(
                 onClick = {
                     isScreenSelectDialogShow = true
                 },
-                enabled = wallpaperPagerState.currentPage < wallpaperList!!.size
+                enabled = wallpaperPagerState.currentPage < wallpaperList!!.size,
+                colors = ButtonColors(
+                    containerColor = ColorPalette.Gray1,
+                    contentColor = ColorPalette.Gray7,
+                    disabledContainerColor = ColorPalette.Gray0,
+                    disabledContentColor = ColorPalette.Gray4,
+                )
             ) {
-                Text(text = "배경화면으로 지정")
+                Text(text = "배경화면으로 지정", modifier = Modifier.padding(horizontal = 20.dp))
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
 
         if(isScreenSelectDialogShow) {
