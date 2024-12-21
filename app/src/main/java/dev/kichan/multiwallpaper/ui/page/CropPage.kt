@@ -3,6 +3,7 @@ package dev.kichan.multiwallpaper.ui.page
 import android.app.Application
 import android.content.Context
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -37,16 +39,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.multiwallpaper.MainViewModel
+import dev.kichan.multiwallpaper.common.pxToDp
 import dev.kichan.multiwallpaper.ui.Route
 import dev.kichan.multiwallpaper.ui.component.WallpaperImage
+import dev.kichan.multiwallpaper.ui.component.imageShape
+import dev.kichan.multiwallpaper.ui.component.shapeModifier
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
 @Composable
@@ -55,6 +63,7 @@ fun CropPage(
     viewModel: MainViewModel
 ) {
     val context = LocalContext.current
+    val density = LocalDensity.current.density
     val imageUri by viewModel.wallpaperUri.observeAsState()
     val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, imageUri)
 
@@ -63,43 +72,24 @@ fun CropPage(
         return displayMetrics.widthPixels.toFloat() / displayMetrics.heightPixels.toFloat()
     }
 
-    var scale by rememberSaveable { mutableStateOf(1f) }
+//    var boxSize by remember { mutableStateOf(IntSize.Zero) }
+    var scale by rememberSaveable { mutableStateOf<Float?>(null) }
     var offsetX by rememberSaveable { mutableStateOf(0f) }
     var offsetY by rememberSaveable { mutableStateOf(0f) }
-    var boxSize by remember { mutableStateOf(IntSize.Zero) }
 
     val onSaveClick = {
-        viewModel.saveWallpaper(
-            uri = imageUri!!,
-            scale = scale,
-            offsetX = offsetX,
-            offsetY = offsetY
-        ) {
-            Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
-
-            navController.navigate(Route.Main.name)
-        }
+        Log.d("TAG", scale.toString())
+//        viewModel.saveWallpaper(
+//            uri = imageUri!!,
+//            scale = scale,
+//            offsetX = offsetX,
+//            offsetY = offsetY
+//        ) {
+//            Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
+//
+//            navController.navigate(Route.Main.name)
+//        }
     }
-
-    //todo: WallpaperImage 컴포넌트랑 sexy하게 통합할 수 있는 방법을 생각해보자
-    val imageShape = RoundedCornerShape(34.dp)
-    val shapeModifier = Modifier
-        .aspectRatio(9f / 16f)
-        .fillMaxWidth(1f)
-        .clip(imageShape)
-        .background(color = Color.Gray, shape = imageShape)
-        .border(width = 2.dp, color = Color(0xffd3d3d3), shape = imageShape)
-        .pointerInput(Unit) {
-            detectTransformGestures { _, pan, zoom, _ ->
-                scale *= zoom
-                offsetX += pan.x
-                offsetY += pan.y
-            }
-        }
-        .clipToBounds()
-        .onSizeChanged {
-            boxSize = it
-        }
 
     Scaffold {
         Column(
@@ -110,24 +100,45 @@ fun CropPage(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
         ) {
-            Text(text = "이미지 크기를 조절해주세요. (사실 아직 안됨)")
+            Image(
+                bitmap = bitmap.asImageBitmap(),
+                contentDescription = null,
+                modifier = Modifier
+                    .aspectRatio(getScreenAspectRatio(context))
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(Color.Red)
+                    .fillMaxWidth()
+                    .graphicsLayer(
+                        scaleX = scale ?: 1.0f,
+                        scaleY = scale ?: 1.0f,
+                        translationX = offsetX,
+                        translationY = offsetY,
+                    )
+                    .pointerInput(Unit) {
+                        detectTransformGestures { _, pan, zoom, _ ->
+                            scale = (scale ?: 1f) * zoom
+                            offsetX += pan.x
+                            offsetY += pan.y
+                        }
+                    }
+                    .onGloballyPositioned  { l ->
+                        if (scale == null) {
+                            val width = l.size.width.toFloat() / density
+                            val height = l.size.height.toFloat() / density
 
-            Box(
-                modifier = shapeModifier
-            ) {
-                Image(
-                    bitmap = bitmap.asImageBitmap(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .graphicsLayer(
-                            scaleX = scale,
-                            scaleY = scale,
-                            translationX = offsetX,
-                            translationY = offsetY,
-                        )
-                )
-            }
+                            val scaleWidth = width / bitmap.width
+                            val scaleHeight = height / bitmap.height
+
+                            scale = maxOf(scaleWidth, scaleHeight)
+
+                            Log.d("SIZE", "Screen : $width, $height")
+                            Log.d("SIZE", "Image ${bitmap.width}, ${bitmap.height}")
+                            Log.d("SIZE", "SW : $scaleWidth")
+                            Log.d("SIZE", "SH : $scaleHeight")
+                            Log.d("SIZE", "Scale : $scale")
+                        }
+                    },
+            )
             Spacer(modifier = Modifier.height(12.dp))
             Button(
                 onClick = { onSaveClick() },
