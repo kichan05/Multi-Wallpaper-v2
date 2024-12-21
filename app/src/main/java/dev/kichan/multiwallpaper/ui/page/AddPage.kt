@@ -3,6 +3,7 @@ package dev.kichan.multiwallpaper.ui.page
 import android.app.Application
 import android.net.Uri
 import android.provider.MediaStore
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -57,6 +58,19 @@ fun AddPage(
         imageUri = it
     }
 
+    val onSaveClick = {
+        viewModel.saveWallpaper(
+            uri = imageUri!!,
+            scale = 1.0f,
+            offsetX = 0f,
+            offsetY = 0f
+        ) {
+            Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
+
+            navController.popBackStack()
+        }
+    }
+
     LaunchedEffect(Unit) {
         launcher.launch("image/*")
     }
@@ -78,14 +92,15 @@ fun AddPage(
 
             Button(
                 onClick = {
-                    viewModel.wallpaperUri.value = imageUri
-                    navController.navigate(Route.Crop.name)
+//                    viewModel.wallpaperUri.value = imageUri
+//                    navController.navigate(Route.Crop.name)
+                    onSaveClick()
                 },
                 colors = buttonColor,
                 modifier = Modifier.fillMaxWidth(),
                 enabled = imageUri != null
             ) {
-                Text(text = "다음")
+                Text(text = "저장")
             }
         }
     }

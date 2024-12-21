@@ -32,9 +32,6 @@ fun MyApp(viewModel: MainViewModel) {
                     viewModel = viewModel
                 )
             }
-            composable(route = Route.Crop.name) {
-                CropPage(navController = navController, viewModel = viewModel)
-            }
         }
     }
 }

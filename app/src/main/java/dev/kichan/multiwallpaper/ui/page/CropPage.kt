@@ -77,7 +77,7 @@ fun CropPage(
         ) {
             Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
 
-            navController.navigate(Route.Main.name)
+            navController.popBackStack()
         }
     }
 
