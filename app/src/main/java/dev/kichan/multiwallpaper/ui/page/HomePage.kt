@@ -18,11 +18,16 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -47,9 +53,17 @@ import dev.kichan.multiwallpaper.ui.component.PagerIndicator
 import dev.kichan.multiwallpaper.ui.component.WallpaperItem
 import dev.kichan.multiwallpaper.ui.component.shapeModifier
 import dev.kichan.multiwallpaper.ui.theme.ColorPalette
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray0
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray1
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray2
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray4
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray6
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray7
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray9
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 import dev.kichan.multiwallpaper.ui.theme.buttonColor
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomePage(
     navController: NavController,
@@ -67,7 +81,23 @@ fun HomePage(
         viewModel.getWallpaper()
     }
 
-    Scaffold {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "다중 배경화면", fontWeight = FontWeight.SemiBold)
+                },
+                colors = TopAppBarColors(
+                    containerColor = Gray0,
+                    scrolledContainerColor = Gray4,
+                    navigationIconContentColor = Gray4,
+                    titleContentColor = Gray9,
+                    actionIconContentColor = Gray4
+                ),
+                modifier = Modifier.border(1.dp, Gray2),
+            )
+        }
+    ) {
         Column(
             modifier = Modifier.padding(it),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -98,7 +128,11 @@ fun HomePage(
                                 },
                             contentAlignment = Alignment.Center
                         ) {
-                            Icon(imageVector = Icons.Default.Add, contentDescription = null, tint = ColorPalette.Gray7)
+                            Icon(
+                                imageVector = Icons.Default.Add,
+                                contentDescription = null,
+                                tint = ColorPalette.Gray7
+                            )
                         }
                     }
                 }
@@ -121,9 +155,9 @@ fun HomePage(
             Spacer(modifier = Modifier.height(20.dp))
         }
 
-        if(isScreenSelectDialogShow) {
+        if (isScreenSelectDialogShow) {
             HomeLocalBottomSheet(onSelected = { type ->
-                if(type == WallpaperManager.FLAG_LOCK || type == -1) {
+                if (type == WallpaperManager.FLAG_LOCK || type == -1) {
                     wallpaperManager.setBitmap(
                         wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
                         wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
@@ -132,7 +166,7 @@ fun HomePage(
                     )
                 }
 
-                if(type == WallpaperManager.FLAG_SYSTEM || type == -1) {
+                if (type == WallpaperManager.FLAG_SYSTEM || type == -1) {
                     wallpaperManager.setBitmap(
                         wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
                         wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
