@@ -49,6 +49,7 @@ import androidx.navigation.compose.rememberNavController
 import dev.kichan.multiwallpaper.MainViewModel
 import dev.kichan.multiwallpaper.ui.Route
 import dev.kichan.multiwallpaper.ui.component.HomeLocalBottomSheet
+import dev.kichan.multiwallpaper.ui.component.LoadingDialog
 import dev.kichan.multiwallpaper.ui.component.PagerIndicator
 import dev.kichan.multiwallpaper.ui.component.WallpaperItem
 import dev.kichan.multiwallpaper.ui.component.shapeModifier
@@ -62,6 +63,10 @@ import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray7
 import dev.kichan.multiwallpaper.ui.theme.ColorPalette.Gray9
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 import dev.kichan.multiwallpaper.ui.theme.buttonColor
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,6 +81,7 @@ fun HomePage(
     val wallpaperPagerState =
         rememberPagerState(initialPage = 0, pageCount = { (wallpaperList?.size ?: 0) + 1 })
     var isScreenSelectDialogShow by rememberSaveable { mutableStateOf(false) }
+    var isLoadingDialogShow by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.getWallpaper()
@@ -158,28 +164,38 @@ fun HomePage(
 
     if (isScreenSelectDialogShow) {
         HomeLocalBottomSheet(onSelected = { type ->
-            if (type == WallpaperManager.FLAG_LOCK || type == -1) {
-                wallpaperManager.setBitmap(
-                    wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
-                    wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
-                    true,
-                    WallpaperManager.FLAG_LOCK
-                )
-            }
+            isLoadingDialogShow = true
+            CoroutineScope(Dispatchers.Default).launch {
+                if (type == WallpaperManager.FLAG_LOCK || type == -1) {
+                    wallpaperManager.setBitmap(
+                        wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
+                        wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
+                        true,
+                        WallpaperManager.FLAG_LOCK
+                    )
+                }
 
-            if (type == WallpaperManager.FLAG_SYSTEM || type == -1) {
-                wallpaperManager.setBitmap(
-                    wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
-                    wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
-                    true,
-                    WallpaperManager.FLAG_SYSTEM
-                )
+                if (type == WallpaperManager.FLAG_SYSTEM || type == -1) {
+                    wallpaperManager.setBitmap(
+                        wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
+                        wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
+                        true,
+                        WallpaperManager.FLAG_SYSTEM
+                    )
+                }
+
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "배경화면으로 지정되었습니다.", Toast.LENGTH_SHORT).show()
+                    isScreenSelectDialogShow = false
+                    isLoadingDialogShow = false
+                }
             }
-            Toast.makeText(context, "배경화면으로 지정되었습니다.", Toast.LENGTH_SHORT).show()
-            isScreenSelectDialogShow = false
         }) {
             isScreenSelectDialogShow = false
         }
+    }
+    if(isLoadingDialogShow) {
+        LoadingDialog()
     }
 }
 

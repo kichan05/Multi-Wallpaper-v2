@@ -39,6 +39,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import dev.kichan.multiwallpaper.MainViewModel
 import dev.kichan.multiwallpaper.ui.Route
+import dev.kichan.multiwallpaper.ui.component.LoadingDialog
 import dev.kichan.multiwallpaper.ui.component.WallpaperImage
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 import dev.kichan.multiwallpaper.ui.theme.buttonColor
@@ -50,6 +51,7 @@ fun AddPage(
 ) {
     val context = LocalContext.current
     var imageUri by rememberSaveable { mutableStateOf<Uri?>(null) }
+    var isLoadingDialogShow by rememberSaveable { mutableStateOf(false) }
 
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) {
         if(imageUri != null && it == null)
@@ -59,6 +61,7 @@ fun AddPage(
     }
 
     val onSaveClick = {
+        isLoadingDialogShow = true
         viewModel.saveWallpaper(
             uri = imageUri!!,
             scale = 1.0f,
@@ -66,6 +69,7 @@ fun AddPage(
             offsetY = 0f
         ) {
             Toast.makeText(context, "저장 완료", Toast.LENGTH_LONG).show()
+            isLoadingDialogShow = false
 
             navController.popBackStack()
         }
@@ -92,8 +96,6 @@ fun AddPage(
 
             Button(
                 onClick = {
-//                    viewModel.wallpaperUri.value = imageUri
-//                    navController.navigate(Route.Crop.name)
                     onSaveClick()
                 },
                 colors = buttonColor,
@@ -103,6 +105,10 @@ fun AddPage(
                 Text(text = "저장")
             }
         }
+    }
+
+    if(isLoadingDialogShow) {
+        LoadingDialog()
     }
 }
 
