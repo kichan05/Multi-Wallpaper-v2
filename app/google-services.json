@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1000839522635",
+    "project_id": "multi-wallpaper-61ae8",
+    "storage_bucket": "multi-wallpaper-61ae8.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000839522635:android:58a9cf12d9b3ac7a80a0ce",
+        "android_client_info": {
+          "package_name": "dev.kichan.multiwallpaper"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtoG1CV-mosMZKko_7AIIx--n3hqbyVgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
