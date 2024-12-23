@@ -154,31 +154,31 @@ fun HomePage(
 
             Spacer(modifier = Modifier.height(20.dp))
         }
+    }
 
-        if (isScreenSelectDialogShow) {
-            HomeLocalBottomSheet(onSelected = { type ->
-                if (type == WallpaperManager.FLAG_LOCK || type == -1) {
-                    wallpaperManager.setBitmap(
-                        wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
-                        wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
-                        true,
-                        WallpaperManager.FLAG_LOCK
-                    )
-                }
-
-                if (type == WallpaperManager.FLAG_SYSTEM || type == -1) {
-                    wallpaperManager.setBitmap(
-                        wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
-                        wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
-                        true,
-                        WallpaperManager.FLAG_SYSTEM
-                    )
-                }
-                Toast.makeText(context, "배경화면으로 지정되었습니다.", Toast.LENGTH_SHORT).show()
-                isScreenSelectDialogShow = false
-            }) {
-                isScreenSelectDialogShow = false
+    if (isScreenSelectDialogShow) {
+        HomeLocalBottomSheet(onSelected = { type ->
+            if (type == WallpaperManager.FLAG_LOCK || type == -1) {
+                wallpaperManager.setBitmap(
+                    wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
+                    wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
+                    true,
+                    WallpaperManager.FLAG_LOCK
+                )
             }
+
+            if (type == WallpaperManager.FLAG_SYSTEM || type == -1) {
+                wallpaperManager.setBitmap(
+                    wallpaperList!![wallpaperPagerState.currentPage].getBitmap(),
+                    wallpaperList!![wallpaperPagerState.currentPage].getCropRect(),
+                    true,
+                    WallpaperManager.FLAG_SYSTEM
+                )
+            }
+            Toast.makeText(context, "배경화면으로 지정되었습니다.", Toast.LENGTH_SHORT).show()
+            isScreenSelectDialogShow = false
+        }) {
+            isScreenSelectDialogShow = false
         }
     }
 }
