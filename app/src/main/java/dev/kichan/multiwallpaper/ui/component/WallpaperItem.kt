@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,6 +34,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import dev.kichan.multiwallpaper.model.Wallpaper
+import dev.kichan.multiwallpaper.ui.theme.ColorPalette
 import dev.kichan.multiwallpaper.ui.theme.MultiWallpaperTheme
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -60,16 +62,27 @@ fun WallpaperItem(
         ) {
             IconButton(
                 onClick = { onDeleteClick() },
+                colors = IconButtonColors(
+                    containerColor = ColorPalette.Red1,
+                    contentColor = ColorPalette.Red6,
+                    disabledContainerColor = ColorPalette.Gray3,
+                    disabledContentColor = ColorPalette.Gray6
+                )
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,
                     contentDescription = null,
-                    tint = Color.Red,
                 )
             }
 
             IconButton(
                 onClick = { isDeleteMode = false },
+                colors = IconButtonColors(
+                    containerColor = ColorPalette.Indigo1,
+                    contentColor = ColorPalette.Indigo6,
+                    disabledContainerColor = ColorPalette.Gray3,
+                    disabledContentColor = ColorPalette.Gray6
+                )
             ) {
                 Icon(
                     imageVector = Icons.Default.Clear,
